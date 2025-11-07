@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Jin Sixu Quiz</title>
+  <style>
+    :root{
+      --bg:#0f172a; /* slate-900 */
+      --card:#111827ee; /* gray-900 w/ alpha */
+      --muted:#94a3b8; /* slate-400 */
+      --text:#e5e7eb; /* gray-200 */
+      --accent:#22d3ee; /* cyan-400 */
+      --accent2:#a78bfa; /* violet-400 */
+      --good:#22c55e; /* green-500 */
+      --bad:#ef4444; /* red-500 */
+    }
+    html,body{height:100%}
+    body{
+      margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+      background: radial-gradient(1200px 800px at 10% -10%, #1f2937 0%, transparent 60%),
+                  radial-gradient(900px 600px at 110% 10%, #11283b 0%, transparent 60%),
+                  var(--bg);
+      color:var(--text);
+      display:flex; align-items:center; justify-content:center; padding:32px;
+    }
+    .wrap{ max-width:880px; width:100%; }
+    .card{
+      background: linear-gradient(180deg, #0b1220 0%, #0a0f1a 100%);
+      border:1px solid #1f2937; border-radius:24px; padding:28px; box-shadow: 0 15px 60px rgba(0,0,0,.45);
+      backdrop-filter: blur(6px);
+    }
+    h1{
+      margin:0 0 8px; font-size: clamp(26px, 4.5vw, 40px); letter-spacing:.3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      -webkit-background-clip:text; background-clip:text; color:transparent;
+    }
+    .sub{ color:var(--muted); margin:0 0 22px; }
+
+    .q{ margin:18px 0 22px; padding:18px; background: #0c1322; border:1px solid #1f2937; border-radius:16px; }
+    .stem{ font-weight:600; margin-bottom:12px; }
+    .opts{ display:grid; grid-template-columns: 1fr; gap:10px; }
+    .opt{
+      display:flex; gap:10px; align-items:flex-start; padding:10px 12px; border:1px solid #1f2937; border-radius:12px; cursor:pointer; background:#0b1220;
+      transition: border-color .2s, background .2s;
+    }
+    .opt:hover{ border-color:#334155; background:#0c1527; }
+    .opt input{ margin-top:2px; }
+
+    .fill{ display:flex; gap:12px; align-items:center; }
+    .fill input{
+      flex:1; padding:12px 14px; border-radius:12px; border:1px solid #1f2937; background:#0a111e; color:var(--text);
+      outline:none; box-shadow:none;
+    }
+    .fill input:focus{ border-color:#334155; }
+
+    .row{ display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:space-between; margin-top:18px; }
+    .btn{
+      appearance:none; border:none; cursor:pointer; font-weight:700; letter-spacing:.3px;
+      padding:12px 18px; border-radius:14px; color:#001014; background: linear-gradient(90deg, var(--accent), var(--accent2));
+      box-shadow: 0 8px 24px rgba(34,211,238,.25);
+    }
+    .btn:disabled{ opacity:.6; cursor:not-allowed; }
+
+    .note{ color:var(--muted); font-size:14px; }
+    .feedback{ margin-top:10px; font-size:14px; }
+    .ok{ color:var(--good); }
+    .ng{ color:var(--bad); }
+
+    .score{
+      margin-top:22px; padding:16px; border-radius:16px; background:#0b1324; border:1px solid #1f2937; display:flex; justify-content:space-between; align-items:center;
+    }
+    .kbd{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; background:#0f172a; padding:2px 6px; border-radius:6px; border:1px solid #1f2937; color:#cbd5e1; }
+    footer{ margin-top:18px; color:var(--muted); font-size:12px; text-align:center; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>Jin Sixu Quiz</h1>
+      <p class="sub">5 questions · 20 points each · Total 100</p>
+
+      <form id="quiz" novalidate>
+        <!-- Q1 -->
+        <section class="q" data-kind="mc" data-correct="D">
+          <div class="stem">1) What is Jin Sixu’s favorite food?</div>
+          <div class="opts">
+            <label class="opt"><input type="radio" name="q1" value="A"> <span>A) Hot pot</span></label>
+            <label class="opt"><input type="radio" name="q1" value="B"> <span>B) BBQ</span></label>
+            <label class="opt"><input type="radio" name="q1" value="C"> <span>C) Stir-fry</span></label>
+            <label class="opt"><input type="radio" name="q1" value="D"> <span>D) Japanese cuisine</span></label>
+          </div>
+          <div class="feedback" id="fb1"></div>
+        </section>
+
+        <!-- Q2 -->
+        <section class="q" data-kind="mc" data-correct="A">
+          <div class="stem">2) What does Jin Sixu like most?</div>
+          <div class="opts">
+            <label class="opt"><input type="radio" name="q2" value="A"> <span>A) Jiajia</span></label>
+            <label class="opt"><input type="radio" name="q2" value="B"> <span>B) Money</span></label>
+            <label class="opt"><input type="radio" name="q2" value="C"> <span>C) Toys</span></label>
+            <label class="opt"><input type="radio" name="q2" value="D"> <span>D) Cars</span></label>
+            <label class="opt"><input type="radio" name="q2" value="E"> <span>E) Firearms</span></label>
+          </div>
+          <div class="feedback" id="fb2"></div>
+        </section>
+
+        <!-- Q3 -->
+        <section class="q" data-kind="mc" data-correct="A">
+          <div class="stem">3) What is Jin Sixu’s favorite sport?</div>
+          <div class="opts">
+            <label class="opt"><input type="radio" name="q3" value="A"> <span>A) Skiing</span></label>
+            <label class="opt"><input type="radio" name="q3" value="B"> <span>B) Golf</span></label>
+            <label class="opt"><input type="radio" name="q3" value="C"> <span>C) Esports</span></label>
+            <label class="opt"><input type="radio" name="q3" value="D"> <span>D) Running</span></label>
+          </div>
+          <div class="feedback" id="fb3"></div>
+        </section>
+
+        <!-- Q4 -->
+        <section class="q" data-kind="mc" data-correct="E">
+          <div class="stem">4) What is Jin Sixu’s favorite game?</div>
+          <div class="opts">
+            <label class="opt"><input type="radio" name="q4" value="A"> <span>A) Apex</span></label>
+            <label class="opt"><input type="radio" name="q4" value="B"> <span>B) Naraka: Bladepoint</span></label>
+            <label class="opt"><input type="radio" name="q4" value="C"> <span>C) Valorant</span></label>
+            <label class="opt"><input type="radio" name="q4" value="D"> <span>D) Delta Force</span></label>
+            <label class="opt"><input type="radio" name="q4" value="E"> <span>E) None</span></label>
+          </div>
+          <div class="feedback" id="fb4"></div>
+        </section>
+
+        <!-- Q5 Fill-in -->
+        <section class="q" data-kind="fill" data-answer="birthday">
+          <div class="stem">5) Jin Sixu’s birthday (free text):</div>
+          <div class="fill">
+            <input id="q5" type="text" placeholder="e.g., January 26 / Jan 26 / 01-26 / 26th January" autocomplete="off" />
+          </div>
+          <div class="feedback" id="fb5"></div>
+          <div class="note">Tip: Several formats are accepted.</div>
+        </section>
+
+        <div class="row">
+          <button type="button" class="btn" id="submitBtn">Submit</button>
+          <div class="score" id="scoreBox" hidden>
+            <div><strong>Score:</strong> <span id="scoreText">0 / 100</span></div>
+            <div class="note">Each question is worth <span class="kbd">20</span> points.</div>
+          </div>
+        </div>
+      </form>
+
+      <footer>
+        Built for quick sharing. You can host this single file on GitHub Pages, Netlify, or Vercel.
+      </footer>
+    </div>
+  </div>
+
+  <script>
+    const POINTS = 20; // per question
+
+    function normalize(s){
+      if(!s) return "";
+      // remove spaces & common separators, lowercase
+      let t = s.toLowerCase().replace(/[\s\-_/.,]/g, "");
+      // remove ordinal suffixes if they end the string (st/nd/rd/th)
+      t = t.replace(/(st|nd|rd|th)$/i, "");
+      return t;
+    }
+
+    function birthdayOK(input){
+      const n = normalize(input);
+      // Accepted normalized forms
+      const accepts = new Set([
+        "january26","jan26","0126","126","26january","26jan"
+      ]);
+      return accepts.has(n);
+    }
+
+    function showFeedback(el, ok, correctText){
+      el.innerHTML = ok ? `<span class="ok">✔ Correct (+${POINTS})</span>`
+                        : `<span class="ng">✖ Incorrect</span>` + (correctText? ` — <span class="note">Correct: <span class="kbd">${correctText}</span></span>`: "");
+    }
+
+    document.getElementById('submitBtn').addEventListener('click', () => {
+      let score = 0;
+
+      // Q1–Q4 (Multiple choice)
+      for(let i=1;i<=4;i++){
+        const sec = document.querySelectorAll('.q')[i-1];
+        const correct = sec.dataset.correct; // 'A' .. 'E'
+        const picked = (document.querySelector(`input[name=q${i}]:checked`)||{}).value;
+        const fb = document.getElementById('fb'+i);
+        const correctText = (sec.querySelector(`input[value=${correct}]`).parentElement.textContent || '').trim();
+        const ok = picked === correct;
+        if(ok) score += POINTS;
+        showFeedback(fb, ok, `${correct}) ${correctText.slice(3)}`);
+      }
+
+      // Q5 (Fill-in)
+      const a5 = document.getElementById('q5').value;
+      const ok5 = birthdayOK(a5);
+      if(ok5) score += POINTS;
+      showFeedback(document.getElementById('fb5'), ok5, 'January 26');
+
+      // Score box
+      const box = document.getElementById('scoreBox');
+      const text = document.getElementById('scoreText');
+      text.textContent = `${score} / 100`;
+      box.hidden = false;
+
+      // Scroll to score for mobile friendliness
+      box.scrollIntoView({behavior:'smooth', block:'center'});
+    });
+  </script>
+</body>
+</html>
